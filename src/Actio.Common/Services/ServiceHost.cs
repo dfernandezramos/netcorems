@@ -13,14 +13,14 @@ namespace Actio.Common.Services
     {
         private readonly IWebHost _webHost;
 
-        public ServiceHost (IWebHost webhost)
+        public ServiceHost(IWebHost webhost)
         {
             _webHost = webhost;
         }
 
         public void Run() => _webHost.Run();
 
-        public static HostBuilder Create<T> (string[] args) where T : class
+        public static HostBuilder Create<T>(string[] args) where T : class
         {
             Console.Title = typeof(T).Namespace;
             var config = new ConfigurationBuilder()
@@ -28,8 +28,10 @@ namespace Actio.Common.Services
                 .AddCommandLine(args)
                 .Build();
             var webHostBuilder = WebHost.CreateDefaultBuilder()
+                .UseDefaultServiceProvider(options => options.ValidateScopes = false)
                 .UseConfiguration(config)
                 .UseStartup<T>();
+
             return new HostBuilder(webHostBuilder.Build());
         }
 
@@ -43,16 +45,16 @@ namespace Actio.Common.Services
             private readonly IWebHost _webHost;
             private IBusClient _bus;
 
-            public HostBuilder (IWebHost webHost)
+            public HostBuilder(IWebHost webHost)
             {
                 _webHost = webHost;
             }
 
-            public BusBuilder UseRabbitMw ()
+            public BusBuilder UseRabbitMq()
             {
                 _bus = (IBusClient)_webHost.Services.GetService(typeof(IBusClient));
 
-                return new BusBuilder (_webHost, _bus);
+                return new BusBuilder(_webHost, _bus);
             }
 
             public override ServiceHost Build()
@@ -66,13 +68,13 @@ namespace Actio.Common.Services
             private readonly IWebHost _webHost;
             private IBusClient _bus;
 
-            public BusBuilder (IWebHost webHost, IBusClient bus)
+            public BusBuilder(IWebHost webHost, IBusClient bus)
             {
                 _webHost = webHost;
                 _bus = bus;
             }
 
-            public BusBuilder SubscribeToCommand<TCommand> () where TCommand : ICommand
+            public BusBuilder SubscribeToCommand<TCommand>() where TCommand : ICommand
             {
                 var handler = (ICommandHandler<TCommand>)_webHost.Services
                     .GetService(typeof(ICommandHandler<TCommand>));
@@ -83,8 +85,7 @@ namespace Actio.Common.Services
 
             public BusBuilder SubscribeToEvent<TEvent>() where TEvent : IEvent
             {
-                var handler = (IEventHandler<TEvent>)_webHost.Services
-                    .GetService(typeof(IEventHandler<TEvent>));
+                var handler = (IEventHandler<TEvent>)_webHost.Services.GetService(typeof(IEventHandler<TEvent>));
                 _bus.WithEventHandlerAsync(handler);
 
                 return this;

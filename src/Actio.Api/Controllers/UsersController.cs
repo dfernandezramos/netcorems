@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Actio.Api.Controllers
 {
-    [Route("[controller1]")]
+    [Route("[controller]")]
     public class UsersController : Controller
     {
         IBusClient _busClient;
