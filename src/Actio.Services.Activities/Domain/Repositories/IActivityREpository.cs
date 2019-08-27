@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Actio.Services.Activities.Domain.Repositories
 {
-    interface IActivityRepository
+    public interface IActivityRepository
     {
         Task<Activity> GetAsync(Guid id);
 
