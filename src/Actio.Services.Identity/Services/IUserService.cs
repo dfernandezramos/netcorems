@@ -1,3 +1,4 @@
+using Actio.Common.Auth;
 using System.Threading.Tasks;
 
 namespace Actio.Services.Identity.Services
@@ -6,6 +7,6 @@ namespace Actio.Services.Identity.Services
     {
         Task RegisterAsync(string email, string password, string name);
 
-        Task LoginAsync(string email, string password);
+        Task<JsonWebToken> LoginAsync(string email, string password);
     }
 }
