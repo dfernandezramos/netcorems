@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Actio.Api.Handlers;
 using Actio.Api.Repositories;
+using Actio.Common.Auth;
 using Actio.Common.Events;
 using Actio.Common.Mongo;
 using Actio.Common.RabbitMq;
@@ -31,6 +32,7 @@ namespace Actio.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddJwt(Configuration);
             services.AddMongoDB(Configuration);
             services.AddRabbitMq(Configuration);
             services.AddScoped<IEventHandler<ActivityCreated>, ActivityCreatedHandler>();
