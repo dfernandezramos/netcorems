@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Actio.Api.Handlers;
+using Actio.Api.Repositories;
 using Actio.Common.Events;
 using Actio.Common.Mongo;
 using Actio.Common.RabbitMq;
@@ -33,6 +34,7 @@ namespace Actio.Api
             services.AddMongoDB(Configuration);
             services.AddRabbitMq(Configuration);
             services.AddScoped<IEventHandler<ActivityCreated>, ActivityCreatedHandler>();
+            services.AddScoped<IActivityRepository, ActivityRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
